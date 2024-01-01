@@ -1,0 +1,51 @@
+import os
+import pickle
+from datetime import datetime
+
+class ToDoList:
+    def __init__(self):
+        self.tasks = []
+
+    def add_task(self, task):
+        self.tasks.append({"task": task, "timestamp": datetime.now()})
+
+    def show_tasks(self):
+        if not self.tasks:
+            print("No tasks found.")
+        else:
+            for idx, task in enumerate(self.tasks, 1):
+                print(f"{idx}. {task['task']} ({task['timestamp']})")
+
+    def save_tasks(self):
+        with open("tasks.pkl", "wb") as file:
+            pickle.dump(self.tasks, file)
+
+    def load_tasks(self):
+        if os.path.exists("tasks.pkl"):
+            with open("tasks.pkl", "rb") as file:
+                self.tasks = pickle.load(file)
+
+
+def main():
+    todo_list = ToDoList()
+    todo_list.load_tasks()
+
+    while True:
+        print("\n1. Add Task\n2. Show Tasks\n3. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            task = input("Enter task: ")
+            todo_list.add_task(task)
+            todo_list.save_tasks()
+        elif choice == "2":
+            todo_list.show_tasks()
+        elif choice == "3":
+            print("Exiting the To-Do List application.")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+
+if __name__ == "__main__":
+    main()
